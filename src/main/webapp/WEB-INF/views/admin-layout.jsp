@@ -75,7 +75,7 @@
                         <li><a href="${contextPath}/auth/DangNhap"><i class="material-icons">account_circle</i></a></li>
                     </c:if>
                     <c:if test="${pageContext.request.userPrincipal.name != null}">
-                        <li><a href="javascript:void(0)">Hi ${pageContext.request.userPrincipal.name},</a></li>
+                        <li><a href="${contextPath}/auth/DoiThongTin">Hi ${pageContext.request.userPrincipal.name},</a></li>
                         <li><a href="${contextPath}/auth/DangXuat"><i class="material-icons">power_settings_new</i></a></li>
                     </c:if>
                 </ul>
@@ -126,6 +126,14 @@
                 </ul>
             </div>
             <!-- #Menu -->
+            <div class="legal">
+                <div class="copyright">
+                    ©2019 <a href="https://www.facebook.com/hoctoanthayhoanghai" target="blank">Liên hệ FB: Thầy Hoàng Hải</a>.
+                </div>
+                <div class="version">
+                    <b>Version: </b> 1.0.0
+                </div>
+            </div>
         </aside>
         <!-- #END# Left Sidebar -->
     </section>
