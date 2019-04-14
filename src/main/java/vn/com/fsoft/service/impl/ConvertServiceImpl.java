@@ -565,7 +565,7 @@ public class ConvertServiceImpl implements ConvertService {
         Tag tmpTag;
         for (String tmp : lstStrTmp) {
             tmpTag = new Tag();
-            tmpTag.setText(StringUtils.replace(tmp, "#", ""));
+            tmpTag.setText(StringUtils.replace(tmp, "#", "").trim());
             tmpTags.add(tmpTag);
         }
         return tmpTags;
