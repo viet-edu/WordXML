@@ -333,6 +333,9 @@ public class ConvertServiceImpl implements ConvertService {
                 if (StringUtils.startsWithAny(paragraph.getText(), QUESTION_DETECT_ARRAY)) {
                     if (questionTmp == null || questionTmp.getName() == null || StringUtils.isEmpty(questionTmp.getName().getText())) {
                         questionTmp = new Question();
+                        questionNameTmp = new QuestionName();
+                        questionNameTmp.setText(paragraph.getText());
+                        questionTmp.setName(questionNameTmp);
                         if (StringUtils.startsWithAny(paragraph.getText(), "(MC")) { // question type is multichoice
                             questionTmp.setType("multichoice");
                             questionTmp.setSingle(false);
@@ -363,10 +366,10 @@ public class ConvertServiceImpl implements ConvertService {
                     case 1:
                         // Handle tag
                         setCommonQuestion(questionTmp);
-                        questionNameTmp = new QuestionName();
-                        questionNameTmp.setText("Câu" + i_question_name);
-                        questionTmp.setName(questionNameTmp);
-                        i_question_name++;
+//                        questionNameTmp = new QuestionName();
+//                        questionNameTmp.setText("Câu" + i_question_name);
+//                        questionTmp.setName(questionNameTmp);
+//                        i_question_name++;
                         lstAnswer = new ArrayList<Answer>();
                         tmpTags = handleTag(strTmp);
                         questionTmp.setTags(tmpTags);
