@@ -66,8 +66,9 @@ public class ConvertServiceImpl implements ConvertService {
     private static final String REGEX_REMOVE_ALL_HTML_TAG = "<[^>]*>";
     private static final String REGEX_GET_IFRAME_SRC = "<iframe\\s+[^>]*?src=(\"|')([^\"']+)\\1";
     private static final String REGEX_GET_IFRAME_HREF = "<iframe\\s+[^>]*?href=(\"|')([^\"']+)\\1";
+    private static final String[] QUESTION_DETECT_ARRAY = {"MC", "DC", "SG", "(MC", "(DC", "(SG"};
     private static final String[] ANSWER_NUMBERING_ARRAY = {"A.", "B.", "C.", "D."};
-    private static final String[] GENERAL_FEEDBACK_ARRAY = {"Lời giải"};
+    private static final String[] GENERAL_FEEDBACK_ARRAY = {"#Lời giải"};
     private static final Integer MAX_WIDTH_XML_WORD = 350;
     private static final Integer MAX_HEIGHT_XML_WORD = 220;
     private static final Integer MAX_WIDTH_WORD_XML = 300;
@@ -114,8 +115,22 @@ public class ConvertServiceImpl implements ConvertService {
 
                 // Write question name
                 run = document.createParagraph().createRun();
-                run.setText("Câu ");
-                run.setText(++q + "(" + question.getQuestionId() + "): ");
+
+                if ("multichoice".equals(question.getType())) {
+                    if (question.getSingle() == true) {
+                        str.append("(SG-");
+                    } else {
+                        str.append("(MC-");
+                    }
+                } else if ("description".equals(question.getType())) {
+                    str.append("(DC-");
+                } else {
+                    str.append("(SG-");
+                }
+                str.append(question.getQuestionId() + ")");
+                str.append("Câu " + ++q);
+                run.setText(str.toString());
+                str.setLength(0);
 
                 // Write tag
                 if (question.getTags() != null) {
@@ -216,7 +231,7 @@ public class ConvertServiceImpl implements ConvertService {
                 // Write generalfeedback
                 paragraph = document.createParagraph();
                 run = paragraph.createRun();
-                run.setText("Lời giải:");
+                run.setText("#Lời giải:");
                 generalFeedbackText = question.getGeneralFeedback().getText();
                 int i_2 = 0;
                 int j_2 = 0;
@@ -313,8 +328,27 @@ public class ConvertServiceImpl implements ConvertService {
             questionTmp.setType("category");
             quiz.getQuestionList().add(questionTmp);
             int i_question_name = 1;
+            StringBuffer buffer = new StringBuffer();
             for (XWPFParagraph paragraph : paragraphList) {
-                if (paragraph.getText().indexOf("Câu") == 0) {
+                if (StringUtils.startsWithAny(paragraph.getText(), QUESTION_DETECT_ARRAY)) {
+                    if (questionTmp == null || questionTmp.getName() == null || StringUtils.isEmpty(questionTmp.getName().getText())) {
+                        questionTmp = new Question();
+                        if (StringUtils.startsWithAny(paragraph.getText(), "(MC")) { // question type is multichoice
+                            questionTmp.setType("multichoice");
+                            questionTmp.setSingle(false);
+                        } else if (StringUtils.startsWithAny(paragraph.getText(), "(SG")) { // question type id single
+                            questionTmp.setType("multichoice");
+                            questionTmp.setSingle(true);
+                        } else if (StringUtils.startsWithAny(paragraph.getText(), "(DC")) { // question type is desciprtion
+                            questionTmp.setType("description");
+                            questionTmp.setSingle(false);
+                        } else { // default
+                            questionTmp.setType("multichoice");
+                            questionTmp.setSingle(true);
+                        }
+                    } else {
+                        buffer.append(paragraph.getText());
+                    }
                     continue;
                 }
                 // Reset when #
@@ -328,7 +362,6 @@ public class ConvertServiceImpl implements ConvertService {
                     switch (i_size) {
                     case 1:
                         // Handle tag
-                        questionTmp = new Question();
                         setCommonQuestion(questionTmp);
                         questionNameTmp = new QuestionName();
                         questionNameTmp.setText("Câu" + i_question_name);
@@ -398,6 +431,19 @@ public class ConvertServiceImpl implements ConvertService {
                         strTmp.append(paragraph.getText());
                         // Handle tag
                         questionTmp = new Question();
+                        if (StringUtils.startsWithAny(buffer.toString(), "(MC")) { // question type is multichoice
+                            questionTmp.setType("multichoice");
+                            questionTmp.setSingle(false);
+                        } else if (StringUtils.startsWithAny(buffer.toString(), "(SG")) { // question type id single
+                            questionTmp.setType("multichoice");
+                            questionTmp.setSingle(true);
+                        } else if (StringUtils.startsWithAny(buffer.toString(), "(DC")) { // question type is desciprtion
+                            questionTmp.setType("description");
+                            questionTmp.setSingle(false);
+                        } else { // default
+                            questionTmp.setType("multichoice");
+                            questionTmp.setSingle(true);
+                        }
                         setCommonQuestion(questionTmp);
                         questionNameTmp = new QuestionName();
                         questionNameTmp.setText(String.valueOf("Câu" + i_question_name));
@@ -410,6 +456,7 @@ public class ConvertServiceImpl implements ConvertService {
                         break;
                     }
                     strTmp.setLength(0);
+                    buffer.setLength(0);
                     continue;
                 }
                 for (XWPFRun item : paragraph.getRuns()) {
@@ -471,7 +518,7 @@ public class ConvertServiceImpl implements ConvertService {
                 res.setErrorList(errorList);
                 throw new Exception("Lỗi file");
             }
-            
+
             String fileName = Helper.covertStringToURL((file.getOriginalFilename()).replaceAll(".docx", ""));
             String filePath = webApp + "//xml//";
             String fullPath = filePath + fileName + ".xml";
@@ -521,12 +568,10 @@ public class ConvertServiceImpl implements ConvertService {
 
     private void setCommonQuestion(Question questionTmp) {
         questionTmp.setShuffleanswers(true);
-        questionTmp.setSingle(true);
         questionTmp.setDefaultGrade("1.0000000");
         questionTmp.setPenalty(0.3333333f);
         questionTmp.setHidden(0);
         questionTmp.setAnswernumbering("ABCD");
-        questionTmp.setType("multichoice");
     }
 
     private void appendExternalHyperlink(String url, String text, XWPFParagraph paragraph) {
