@@ -357,7 +357,7 @@ public class ConvertServiceImpl implements ConvertService {
                         || StringUtils.startsWithAny(paragraph.getText(), ANSWER_NUMBERING_ARRAY)
                         || StringUtils.startsWithAny(paragraph.getText(), GENERAL_FEEDBACK_ARRAY)) {
                     i_size += 1;
-                    if (strTmp.toString().length() == 0)
+                    if (strTmp.toString().trim().length() == 0)
                         strTmp.append(paragraph.getText());
                     switch (i_size) {
                     case 1:
@@ -384,7 +384,12 @@ public class ConvertServiceImpl implements ConvertService {
                         fileTmp = new vn.com.fsoft.model.File();
                         fileTmpList = new ArrayList<>();
                         questionTmp.setQuestiontext(questionTextTmp);
-                        i_size += 1;
+                        if ("description".equals(questionTmp.getType())) {
+                            i_size = 7;
+                            break;
+                        } else {
+                            i_size += 1;
+                        }
                         strTmp.setLength(0);
                         strTmp.append(paragraph.getText());
                     case 3:
@@ -508,7 +513,7 @@ public class ConvertServiceImpl implements ConvertService {
                         }
                     }
                     if (!isFraction100) {
-                        errorList.add(question.getName().getText() + " chưa bôi đậm đáp án đúng");
+                        //errorList.add(question.getName().getText() + " chưa bôi đậm đáp án đúng");
                     }
                     isFraction100 = false;
                 }
