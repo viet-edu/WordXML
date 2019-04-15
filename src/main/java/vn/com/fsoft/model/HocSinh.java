@@ -50,7 +50,7 @@ public class HocSinh {
     private Integer roleId;
 
 	@Column(name = "enabled")
-	private Boolean enabled;
+	private String enabled;
 
 	@Column(name="created_date")
 	@Temporal(TemporalType.DATE)

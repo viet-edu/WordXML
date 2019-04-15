@@ -85,8 +85,8 @@
                                 <div class="form-group">
                                     <div class="form-line">
                                         <form:select path="enabled" class="form-control">
-                                            <form:option value="true">Hoạt động</form:option>
-                                            <form:option value="false">Khóa</form:option>
+                                            <form:option value="Y">Hoạt động</form:option>
+                                            <form:option value="N">Khóa</form:option>
                                         </form:select>
                                     </div>
                                 </div>
