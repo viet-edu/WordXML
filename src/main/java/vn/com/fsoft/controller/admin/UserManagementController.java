@@ -70,18 +70,23 @@ public class UserManagementController {
         model.addAttribute("action", "updateAction");
         model.addAttribute("title", "Update User");
         HocSinh hocSinh = hocSinhService.findByMaHocSinh(maHocSinh);
-//        List<Permission> permissionListReturn = permissionService.getPermissionList().stream().map(tmp -> {
-//            for (Permission permission : hocSinh.getRole().getPermissionList()) {
-//                if (permission.getPermissionId() == permission.getPermissionId()) {
-//                    return tmp;
-//                }
-//            }
-//            return tmp;
-//        }).collect(Collectors.toList());
-//        hocSinh.setPermissionList(permissionListReturn);
         model.addAttribute("permissionList", permissionService.getPermissionList());
         hocSinh.setPermissionList(hocSinh.getRole().getPermissionList());
         return new ModelAndView("admin/create-user", Constants.DEFAULT_MODEL_NAME, hocSinh);
+    }
+
+    @RequestMapping(value = "delete/{maHocSinh}", method = RequestMethod.GET)
+    public ModelAndView deleteUserAction(Model model, @PathVariable("maHocSinh") Integer maHocSinh,
+            RedirectAttributes redirectAttributes) {
+        try {
+            hocSinhService.deleteHocSinh(maHocSinh);
+            redirectAttributes.addFlashAttribute("success", "Xóa User thành công");
+            return new ModelAndView("redirect:/admin/QuanLyUser/list");
+        } catch (Exception e) {
+            e.printStackTrace();
+            redirectAttributes.addFlashAttribute("error", "Xóa User thất bại");
+            return new ModelAndView("redirect:/admin/QuanLyUser/list");
+        }
     }
 
     @RequestMapping(value = "updateAction", method = RequestMethod.POST)

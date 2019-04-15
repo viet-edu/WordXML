@@ -37,6 +37,10 @@ public class HocSinhServiceImpl implements HocSinhService, UserDetailsService {
             throw new UsernameNotFoundException("User " + username + " was not found in the database");
         }
 
+        if (userInfo.getEnabled() == null || userInfo.getEnabled() == false) {
+            throw new UsernameNotFoundException("User " + username + " has been blocked");
+        }
+
         List<GrantedAuthority> grantList= new ArrayList<GrantedAuthority>();
         if (userInfo.getRole() != null) {
             grantList.add(new SimpleGrantedAuthority("ROLE_"+userInfo.getRole().getName()));
@@ -70,6 +74,9 @@ public class HocSinhServiceImpl implements HocSinhService, UserDetailsService {
 		if (findByUsername(hocSinh.getUsername()) != null) {
 		    throw new Exception("Username is existed");
 		}
+
+		hocSinh.setCreatedDate(Helper.getCurrentDateTime());
+		hocSinh.setCreatedBy(Helper.getCurrentLogin());
 
 		return hocSinhRepository.save(hocSinh);
 	}
@@ -108,6 +115,10 @@ public class HocSinhServiceImpl implements HocSinhService, UserDetailsService {
             throw new Exception("User not existed");
         }
         Helper.copyNonNullProperties(hocSinh, target);
+
+        target.setUpdatedDate(Helper.getCurrentDateTime());
+        target.setUpdatedBy(Helper.getCurrentLogin());
+
         HocSinh saved = hocSinhRepository.save(target);
         rolePermissionService.saveRolePermission(hocSinh);
         return saved;

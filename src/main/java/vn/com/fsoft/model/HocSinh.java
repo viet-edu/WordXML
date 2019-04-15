@@ -1,5 +1,6 @@
 package vn.com.fsoft.model;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -13,7 +14,11 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.persistence.Transient;
+
+import org.springframework.format.annotation.DateTimeFormat;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -44,7 +49,26 @@ public class HocSinh {
 	@Column(name = "Role_Id", length = 5)
     private Integer roleId;
 
-	@ManyToOne(fetch = FetchType.EAGER, cascade=CascadeType.ALL)
+	@Column(name = "enabled")
+	private Boolean enabled;
+
+	@Column(name="created_date")
+	@Temporal(TemporalType.DATE)
+	@DateTimeFormat(pattern="dd/MM/yyyy HH:mm")
+	private Date createdDate;
+
+    @Column(name="created_by", length = 255)
+    private String createdBy;
+
+    @Column(name="updated_date")
+    @Temporal(TemporalType.DATE)
+    @DateTimeFormat(pattern="dd/MM/yyyy HH:mm")
+    private Date updatedDate;
+
+    @Column(name="updated_by", length = 255)
+    private String updatedBy;
+
+	@ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "Role_Id", insertable = false, updatable = false)
     private Role role;
 

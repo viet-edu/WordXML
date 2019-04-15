@@ -28,6 +28,8 @@
                                     <th style="">Mã</th>
                                     <th style="">Họ tên</th>
                                     <th style="">Username</th>
+                                    <th style="">Trạng thái</th>
+                                    <th style="">Ngày tạo</th>
                                     <th style=""></th>
                                 </tr>
                             </thead>
@@ -39,7 +41,17 @@
                                         <td>${item.tenHocSinh}</td>
                                         <td>${item.username}</td>
                                         <td>
+                                            <c:if test="${item.enabled}">
+                                                Hoạt động
+                                            </c:if>
+                                            <c:if test="${!item.enabled}">
+                                                Khóa
+                                            </c:if>
+                                        </td>
+                                        <td>${item.createdDate}</td>
+                                        <td>
                                             <a href="${contextPath}/admin/QuanLyUser/update/${item.maHocSinh}"><span class="glyphicon glyphicon-edit"></span></a>
+                                            <a href="${contextPath}/admin/QuanLyUser/delete/${item.maHocSinh}"><span class="glyphicon glyphicon-trash"></span></a>
                                         </td>
                                     </tr>
                                 </c:forEach>

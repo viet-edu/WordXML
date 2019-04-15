@@ -36,7 +36,7 @@
                         </div>
                         <div class="row clearfix">
                             <div class="col-lg-2 col-md-2 col-sm-4 col-xs-5 form-control-label">
-                                <label for="description">Username<span class="col-red">(*):</span></label>
+                                <label for="description">Tài khoản<span class="col-red">(*):</span></label>
                             </div>
                             <div class="col-lg-6 col-md-6 col-sm-4 col-xs-4">
                                 <div class="form-group">
@@ -48,7 +48,7 @@
                         </div>
                         <div class="row clearfix">
                             <div class="col-lg-2 col-md-2 col-sm-4 col-xs-5 form-control-label">
-                                <label for="description">Password<span class="col-red">(*):</span></label>
+                                <label for="description">Mật khẩu<span class="col-red">(*):</span></label>
                             </div>
                             <div class="col-lg-6 col-md-6 col-sm-4 col-xs-4">
                                 <div class="form-group">
@@ -61,7 +61,7 @@
                         <c:if test="${action eq str}">
                         <div class="row clearfix">
                             <div class="col-lg-2 col-md-2 col-sm-4 col-xs-5 form-control-label">
-                                <label for="description">Role<span class="col-red">(*):</span></label>
+                                <label for="description">Quyền<span class="col-red">(*):</span></label>
                             </div>
                             <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
                                 <div class="form-group">
@@ -77,6 +77,21 @@
                             </div>
                         </div>
                         </c:if>
+                        <div class="row clearfix">
+                            <div class="col-lg-2 col-md-2 col-sm-4 col-xs-5 form-control-label">
+                                <label for="description">Trạng thái<span class="col-red">(*):</span></label>
+                            </div>
+                            <div class="col-lg-6 col-md-6 col-sm-4 col-xs-4">
+                                <div class="form-group">
+                                    <div class="form-line">
+                                        <form:select path="enabled" class="form-control">
+                                            <form:option value="true">Hoạt động</form:option>
+                                            <form:option value="false">Khóa</form:option>
+                                        </form:select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         <div class="row clearfix">
                             <div class="col-lg-offset-2 col-md-offset-2 col-sm-offset-4 col-xs-offset-5">
                                 <form:button name="save" class="btn btn-success m-t-15 w-90 waves-effect">Save</form:button>
