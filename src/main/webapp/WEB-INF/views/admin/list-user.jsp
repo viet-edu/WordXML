@@ -41,10 +41,10 @@
                                         <td>${item.tenHocSinh}</td>
                                         <td>${item.username}</td>
                                         <td>
-                                            <c:if test="${item.enabled}">
+                                            <c:if test="${item.enabled === 'Y'}">
                                                 Hoạt động
                                             </c:if>
-                                            <c:if test="${!item.enabled}">
+                                            <c:if test="${!item.enabled === 'N'}">
                                                 Khóa
                                             </c:if>
                                         </td>
