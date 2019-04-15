@@ -37,9 +37,9 @@ public class HocSinhServiceImpl implements HocSinhService, UserDetailsService {
             throw new UsernameNotFoundException("User " + username + " was not found in the database");
         }
 
-        if (userInfo.getEnabled() == null || "N".equals(userInfo.getEnabled())) {
-            throw new UsernameNotFoundException("User " + username + " has been blocked");
-        }
+//        if (userInfo.getEnabled() == null || "N".equals(userInfo.getEnabled())) {
+//            throw new UsernameNotFoundException("User " + username + " has been blocked");
+//        }
 
         List<GrantedAuthority> grantList= new ArrayList<GrantedAuthority>();
         if (userInfo.getRole() != null) {
