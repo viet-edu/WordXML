@@ -118,16 +118,17 @@ public class ConvertServiceImpl implements ConvertService {
 
                 if ("multichoice".equals(question.getType())) {
                     if (question.getSingle() == true) {
-                        str.append("(SG-");
+                        str.append("(SG");
                     } else {
-                        str.append("(MC-");
+                        str.append("(MC");
                     }
                 } else if ("description".equals(question.getType())) {
-                    str.append("(DC-");
+                    str.append("(DC");
                 } else {
-                    str.append("(SG-");
+                    str.append("(SG");
                 }
                 if (StringUtils.isNotBlank(question.getQuestionId())) {
+                    str.append("-");
                     str.append(question.getQuestionId());
                 }
                 str.append(")");
@@ -137,6 +138,7 @@ public class ConvertServiceImpl implements ConvertService {
 
                 // Write tag
                 if (question.getTags() != null) {
+                    str.append("#");
                     for (Tag tag : question.getTags()) {
                         str.append(tag.getText());
                         str.append(",");
@@ -146,6 +148,7 @@ public class ConvertServiceImpl implements ConvertService {
                 if (str.length() > 0) {
                     str.setLength(str.length() - 1);
                 }
+                run.addBreak();
                 run.setText(str.toString());
                 str.setLength(0);
 
