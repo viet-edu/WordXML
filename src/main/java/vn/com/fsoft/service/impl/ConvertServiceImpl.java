@@ -329,20 +329,22 @@ public class ConvertServiceImpl implements ConvertService {
             quiz.getQuestionList().add(questionTmp);
             int i_question_name = 1;
             StringBuffer buffer = new StringBuffer();
+            String pararaphGetText = null;
             for (XWPFParagraph paragraph : paragraphList) {
-                if (StringUtils.startsWithAny(paragraph.getText(), QUESTION_DETECT_ARRAY)) {
+                pararaphGetText = paragraph.getText().trim();
+                if (StringUtils.startsWithAny(pararaphGetText, QUESTION_DETECT_ARRAY)) {
                     if (questionTmp == null || questionTmp.getName() == null || StringUtils.isEmpty(questionTmp.getName().getText())) {
                         questionTmp = new Question();
                         questionNameTmp = new QuestionName();
-                        questionNameTmp.setText(paragraph.getText());
+                        questionNameTmp.setText(pararaphGetText);
                         questionTmp.setName(questionNameTmp);
-                        if (StringUtils.startsWithAny(paragraph.getText(), "(MC")) { // question type is multichoice
+                        if (StringUtils.startsWithAny(pararaphGetText, "(MC")) { // question type is multichoice
                             questionTmp.setType("multichoice");
                             questionTmp.setSingle(false);
-                        } else if (StringUtils.startsWithAny(paragraph.getText(), "(SG")) { // question type id single
+                        } else if (StringUtils.startsWithAny(pararaphGetText, "(SG")) { // question type id single
                             questionTmp.setType("multichoice");
                             questionTmp.setSingle(true);
-                        } else if (StringUtils.startsWithAny(paragraph.getText(), "(DC")) { // question type is desciprtion
+                        } else if (StringUtils.startsWithAny(pararaphGetText, "(DC")) { // question type is desciprtion
                             questionTmp.setType("description");
                             questionTmp.setSingle(false);
                         } else { // default
@@ -350,18 +352,18 @@ public class ConvertServiceImpl implements ConvertService {
                             questionTmp.setSingle(true);
                         }
                     } else {
-                        buffer.append(paragraph.getText());
+                        buffer.append(pararaphGetText);
                     }
                     continue;
                 }
                 // Reset when #
-                if (paragraph.getText() != null && paragraph.getText().length() > 1
-                        && paragraph.getText().indexOf("#") == 0
-                        || StringUtils.startsWithAny(paragraph.getText(), ANSWER_NUMBERING_ARRAY)
-                        || StringUtils.startsWithAny(paragraph.getText(), GENERAL_FEEDBACK_ARRAY)) {
+                if (pararaphGetText != null && pararaphGetText.length() >= 1
+                        && pararaphGetText.indexOf("#") == 0
+                        || StringUtils.startsWithAny(pararaphGetText, ANSWER_NUMBERING_ARRAY)
+                        || StringUtils.startsWithAny(pararaphGetText, GENERAL_FEEDBACK_ARRAY)) {
                     i_size += 1;
                     if (strTmp.toString().trim().length() == 0)
-                        strTmp.append(paragraph.getText());
+                        strTmp.append(pararaphGetText);
                     switch (i_size) {
                     case 1:
                         // Handle tag
@@ -394,7 +396,7 @@ public class ConvertServiceImpl implements ConvertService {
                             i_size += 1;
                         }
                         strTmp.setLength(0);
-                        strTmp.append(paragraph.getText());
+                        strTmp.append(pararaphGetText);
                     case 3:
                     case 4:
                     case 5:
@@ -436,16 +438,16 @@ public class ConvertServiceImpl implements ConvertService {
                         // Handle tags.
                         i_size = 1;
                         strTmp.setLength(0);
-                        strTmp.append(paragraph.getText());
+                        strTmp.append(pararaphGetText);
                         // Handle tag
                         questionTmp = new Question();
-                        if (StringUtils.startsWithAny(buffer.toString(), "(MC")) { // question type is multichoice
+                        if (StringUtils.startsWithAny(buffer.toString().trim(), "(MC")) { // question type is multichoice
                             questionTmp.setType("multichoice");
                             questionTmp.setSingle(false);
-                        } else if (StringUtils.startsWithAny(buffer.toString(), "(SG")) { // question type id single
+                        } else if (StringUtils.startsWithAny(buffer.toString().trim(), "(SG")) { // question type id single
                             questionTmp.setType("multichoice");
                             questionTmp.setSingle(true);
-                        } else if (StringUtils.startsWithAny(buffer.toString(), "(DC")) { // question type is desciprtion
+                        } else if (StringUtils.startsWithAny(buffer.toString().trim(), "(DC")) { // question type is desciprtion
                             questionTmp.setType("description");
                             questionTmp.setSingle(false);
                         } else { // default
