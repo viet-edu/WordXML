@@ -148,7 +148,8 @@ public class ConvertServiceImpl implements ConvertService {
                 if (str.length() > 0) {
                     str.setLength(str.length() - 1);
                 }
-                run.addBreak();
+
+                run = document.createParagraph().createRun();
                 run.setText(str.toString());
                 str.setLength(0);
 
