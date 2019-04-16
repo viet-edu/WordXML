@@ -127,8 +127,11 @@ public class ConvertServiceImpl implements ConvertService {
                 } else {
                     str.append("(SG-");
                 }
-                str.append(question.getQuestionId() + ")");
-                str.append("Câu " + ++q);
+                if (StringUtils.isNotBlank(question.getQuestionId())) {
+                    str.append(question.getQuestionId());
+                }
+                str.append(")");
+                str.append("Câu " + ++q + ".");
                 run.setText(str.toString());
                 str.setLength(0);
 
