@@ -413,9 +413,9 @@ public class ConvertServiceImpl implements ConvertService {
                             answerTmp.setFormat("html");
                             for (XWPFRun item : paragraph.getRuns()) {
                                 if (item.getText(item.getTextPosition()) != null) {
-                                    if (StringUtils.startsWithAny(item.getText(item.getTextPosition()), ANSWER_NUMBERING_ARRAY)
-                                            && item.isBold()) {
+                                    if (item.isBold()) {
                                         strTmp.insert(0, "BOLD");
+                                        break;
                                     }
                                 }
                             }
